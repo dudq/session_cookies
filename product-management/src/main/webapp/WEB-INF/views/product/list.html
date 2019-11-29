@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<a href="/create-product">Create new product</a>
+<h1>Products</h1>
+<a href="/sort-products">Sort product by price reduce</a>
+<br/>
+<a href="/products">Sort product by id</a>
+<br/>
+<form method="get" th:action="@{/find-products}" th:object="${product}">
+    <h3>Find by Supplier</h3>
+    <select th:field="*{supplier}">
+        <option th:each="p:${suppliers}" th:text="${p.name}" th:value="${p.id}"></option>
+    </select>
+    <input type="submit" value="Find">
+</form>
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>ImportDate</th>
+        <th>Image</th>
+        <th>Supplier</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    <th:block th:each="product : ${products}">
+        <tr>
+            <td><a th:href="@{/product/__${product.id}__}" th:text="${product.name}"></a></td>
+            <td th:text="${product.description}"></td>
+            <td th:text="${product.importDate}"></td>
+            <td><img height="60px" th:src="@{${product.image}}" width="40px"></td>
+            <td th:text="${product.supplier.name}"></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.quantity}"></td>
+            <td><a th:href="@{/edit-product/__${product.id}__ }">Edit</a></td>
+            <td><a th:href="@{/delete-product/__${product.id}__ }">Delete</a></td>
+        </tr>
+    </th:block>
+</table>
+<div>
+    <a th:href="@{'/products'(page=${products.number - 1})}" th:if="${products.hasPrevious()}">Previous</a>
+    <span th:text="${products.number + 1}"></span>/<span th:text="${products.totalPages}"></span>
+    <a th:href="@{'/products'(page=${products.number + 1})}" th:if="${products.hasNext()}">Next</a>
+</div>
+</body>
+</html>
